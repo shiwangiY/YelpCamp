@@ -18,8 +18,9 @@ if (process.env.NODE_ENV !== "production") {
   const userRoutes = require('./routes/users');
   const campgroundRoutes = require('./routes/campgrounds');
   const reviewRoutes = require('./routes/reviews');
+const { Session } = require('inspector');
   
-  const MongoDBStore = require("connect-mongo")(session);
+  const MongoDBStore = require('connect-mongo');
   
   const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp';
   
@@ -50,7 +51,7 @@ if (process.env.NODE_ENV !== "production") {
   }))
   const secret = process.env.SECRET || 'thisshouldbeabettersecret!';
   
-  const store = new MongoDBStore({
+  const store = MongoDBStore.create({
       url: dbUrl,
       secret,
       touchAfter: 24 * 60 * 60
@@ -61,9 +62,9 @@ if (process.env.NODE_ENV !== "production") {
   })
   
   const sessionConfig = {
-      store,
+      store: store,
       name: 'session',
-      secret,
+      secret: secret,
       resave: false,
       saveUninitialized: true,
       cookie: {
